@@ -1,0 +1,40 @@
+[project]
+name = "gitlab-backup"
+version = "0.1.0"
+description = "Daily incremental mirror backup of GitLab groups/projects"
+requires-python = ">=3.11"
+dependencies = [
+    "python-gitlab>=4.4,<5",
+    "apscheduler>=3.10,<4",
+    "pydantic-settings[yaml]>=2.5,<3",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.30,<1",
+]
+
+[tool.uv]
+# This is a runnable service (python -m app.main), not a library to publish -
+# nothing to build or install in editable mode.
+package = false
+
+[tool.ruff]
+line-length = 120
+exclude = [".venv", "alembic", "./tasks"]
+lint.select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.1",
+]

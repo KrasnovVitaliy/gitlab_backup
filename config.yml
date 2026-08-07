@@ -1,0 +1,49 @@
+# Any value below can also be overridden by an environment variable, without
+# touching this file — env vars always win. Nesting uses a double underscore,
+# e.g. BACKUP__PARALLEL_WORKERS=20 overrides backup.parallel_workers.
+
+# GitLab connection.
+#
+# The access token (used both for the REST API discovery and, embedded in
+# the HTTPS clone URL, for git itself) is deliberately not a field here at
+# all: set it via the GITLAB_API_TOKEN environment variable and
+# pydantic-settings picks it up automatically. Personal/Project/Group
+# Access Token with scope `read_api` + `read_repository` is enough.
+gitlab:
+  url: "https://gitlab.com"
+  verify_ssl: true
+
+backup:
+  root_dir: "/backups"
+  parallel_workers: 12          # concurrent git clone/fetch operations
+  include_subgroups: true       # recurse into subgroups of each configured group
+  include_archived: false
+  clone_timeout: 600            # seconds, per repo, per attempt
+  retries: 2                    # extra attempts after the first failure
+  prune_removed: false          # delete local mirrors of projects no longer found in GitLab
+
+# Groups to back up. Each entry is either a full path ("group/subgroup") or a
+# numeric group id. All projects in each group (and its subgroups, if
+# include_subgroups is true) are discovered automatically — no need to list
+# individual repos, even at ~500 per group.
+groups:
+  - "b3937"
+
+# Built-in scheduler — no external cron needed, the container just keeps running.
+schedule:
+  enabled: true
+  type: "cron"              # "cron" | "interval"
+  cron: "0 2 * * *"         # daily at 02:00, in the timezone below
+  # type: "interval"
+  # interval_minutes: 1440
+  timezone: "Europe/Kyiv"
+  run_on_start: true        # also do one pass immediately when the container starts
+
+logging:
+  level: "INFO"
+  file: "/backups/logs/gitlab_backup.log"
+
+# HTTP server: GET /healthz, GET /status, POST /backup/run (manual trigger).
+server:
+  host: "0.0.0.0"
+  port: 8080
