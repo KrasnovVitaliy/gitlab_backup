@@ -36,12 +36,11 @@ schedule:
   cron: "0 2 * * *"         # daily at 02:00, in the timezone below
   # type: "interval"
   # interval_minutes: 1440
-  timezone: "Europe/Kyiv"
+  timezone: "Europe/Moscow"
   run_on_start: true        # also do one pass immediately when the container starts
 
 logging:
   level: "INFO"
-  file: "/backups/logs/gitlab_backup.log"
 
 # HTTP server: GET /healthz, GET /status, POST /backup/run (manual trigger).
 server:

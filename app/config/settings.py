@@ -55,7 +55,6 @@ class ScheduleConfig(BaseModel):
 
 class LoggingConfig(BaseModel):
     level: str = "INFO"
-    file: str | None = None
 
 
 class ServerConfig(BaseModel):

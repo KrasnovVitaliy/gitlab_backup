@@ -10,7 +10,7 @@
 ```
 app/
   main.py             — точка входа, CLI (--config, --once)
-  logging_setup.py    — настройка стандартного logging (stdout + rotating file)
+  logging_setup.py    — настройка стандартного logging (только stdout)
 
   config/
     settings.py       — AppConfig на pydantic-settings: config.yml + env-переменные
@@ -186,5 +186,5 @@ make format    # uv run ruff format app/
   пропали из GitLab (переименованы/удалены/потеряли доступ) — по умолчанию
   выключено, чтобы ничего не удалялось молча.
 - Каждый прогон логирует построчный результат и итоговую сводку
-  (успех/провал) через стандартный `logging`, вывод идёт в stdout и (если
-  задан `logging.file`) в файл с ротацией (10 МБ, 14 файлов).
+  (успех/провал) через стандартный `logging`, вывод идёт только в stdout
+  (смотреть через `docker compose logs`).
