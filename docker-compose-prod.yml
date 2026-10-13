@@ -1,0 +1,14 @@
+services:
+  gitlab-backup:
+    image: cr.selcloud.ru/kitedev-docker-regis/gitlab-backup:latest
+    container_name: gitlab-backup
+    restart: unless-stopped
+    environment:
+      GITLAB_API_TOKEN: ${GITLAB_API_TOKEN:?set GITLAB_API_TOKEN in .env}
+      SERVER__PORT: ${SERVER_PORT:-8080}
+    ports:
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+      - ./backups:/backups
+    user: "${UID}:${GID}"

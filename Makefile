@@ -2,11 +2,18 @@
 export
 
 DOCKER := docker
+BUILD := buildx build
 COMPOSE := docker compose
 UV_RUN := uv run
 
 IMAGE_NAME := gitlab-backup
+IMAGE := $(DOCKER_IMAGE_REGISTRY)/$(IMAGE_NAME)
 VERSION := $(shell uv version --short)
+
+# Target platform of the built image. Production runs on linux/amd64, so this is
+# the default on any host, including Apple Silicon (built via emulation there).
+# Override per call, e.g. `make docker-build PLATFORM=linux/arm64`.
+PLATFORM ?= linux/amd64
 
 .PHONY: help
 help: ## Show this help message
@@ -35,10 +42,14 @@ bump-major-version: ## Bump major version (X++.0.0), e.g. breaking changes
 
 ## --- Docker image --------------------------------------------------------
 
-.PHONY: build
-build: ## Build the docker image, tagged 'latest' and with the current version
-	$(COMPOSE) build
-	$(DOCKER) tag $(IMAGE_NAME):latest $(IMAGE_NAME):$(VERSION)
+.PHONY: docker-build
+docker-build: ## Build the docker image (linux/amd64 by default), tagged 'latest' and with the current version
+	$(DOCKER) $(BUILD) --platform $(PLATFORM) --load -t $(IMAGE):latest -t $(IMAGE):$(VERSION) .
+
+.PHONY: docker-push
+docker-push: docker-build ## Push the image to DOCKER_IMAGE_REGISTRY (run 'docker login' first)
+	$(DOCKER) push $(IMAGE):$(VERSION)
+	$(DOCKER) push $(IMAGE):latest
 
 ## --- Service lifecycle ----------------------------------------------------
 

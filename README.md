@@ -188,3 +188,6 @@ make format    # uv run ruff format app/
 - Каждый прогон логирует построчный результат и итоговую сводку
   (успех/провал) через стандартный `logging`, вывод идёт только в stdout
   (смотреть через `docker compose logs`).
+
+## Восстановление репозитория
+git clone backups/kite-group2/infra.git ./tmp/infra

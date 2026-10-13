@@ -27,7 +27,7 @@ backup:
 # include_subgroups is true) are discovered automatically — no need to list
 # individual repos, even at ~500 per group.
 groups:
-  - "b3937"
+  - "kite-group2"
 
 # Built-in scheduler — no external cron needed, the container just keeps running.
 schedule:
